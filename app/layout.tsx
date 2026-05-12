@@ -25,8 +25,6 @@ export const metadata = {
   other: {
     'mobile-web-app-capable': 'yes',
   },
-  // Controls the browser chrome / status bar color on mobile
-  // @ts-expect-error — Next.js 14 accepts themeColor in metadata
   themeColor: '#0d0d0d',
 };
 
