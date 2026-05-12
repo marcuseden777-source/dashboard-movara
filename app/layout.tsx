@@ -25,7 +25,13 @@ export const metadata = {
   other: {
     'mobile-web-app-capable': 'yes',
   },
+};
+
+// themeColor belongs in viewport export (Next.js 14.1+)
+export const viewport = {
   themeColor: '#0d0d0d',
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
