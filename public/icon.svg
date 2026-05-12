@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#0d0d0d"/>
+  <rect x="48" y="48" width="416" height="416" rx="64" fill="#111111"/>
+  <!-- M letterform -->
+  <path d="M120 340 L120 172 L192 172 L256 268 L320 172 L392 172 L392 340 L340 340 L340 248 L280 340 L232 340 L172 248 L172 340 Z" fill="#ffffff"/>
+  <!-- accent dot -->
+  <circle cx="380" cy="136" r="28" fill="#6366f1"/>
+</svg>

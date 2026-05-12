@@ -8,6 +8,26 @@ import './globals.css';
 export const metadata = {
   title: 'Movara Dashboard',
   description: 'AI agency operations dashboard',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    title: 'Movara',
+    statusBarStyle: 'black-translucent',
+  },
+  icons: {
+    icon: [
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
+  },
+  // Controls the browser chrome / status bar color on mobile
+  // @ts-expect-error — Next.js 14 accepts themeColor in metadata
+  themeColor: '#0d0d0d',
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
