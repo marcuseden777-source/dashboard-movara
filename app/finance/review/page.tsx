@@ -1,7 +1,36 @@
 import { getFinanceData, sgd, shortDate } from '@/lib/finance-os';
 
+const decisionCopy: Record<string, { label: string; next: string; treatment: string }> = {
+  funding: {
+    label: 'Owner / director funding',
+    next: 'Choose share capital, shareholder loan or director loan for each receipt.',
+    treatment: 'Balance sheet',
+  },
+  transfer: {
+    label: 'Related-party / clearing transfers',
+    next: 'Confirm reimbursement, intercompany receivable or director-current-account treatment.',
+    treatment: 'Outside P&L',
+  },
+  commission: {
+    label: 'Commission payments',
+    next: 'Confirm recipient, calculation basis and payroll / contractor support.',
+    treatment: 'Probable OpEx',
+  },
+  review: {
+    label: 'Unidentified payments',
+    next: 'Identify the supplier, business purpose and supporting document.',
+    treatment: 'Unclassified',
+  },
+  expense: {
+    label: 'Expense allocations',
+    next: 'Match the transfer to the underlying supplier charge to prevent double counting.',
+    treatment: 'Review',
+  },
+};
+
 export default async function FinanceReviewPage() {
   const d = await getFinanceData();
+
   const missingBySupplier = new Map<string, { count: number; amount: number }>();
   for (const row of d.reviewMissingEvidence) {
     const supplier = row.supplier || 'Uncategorised';
@@ -12,6 +41,22 @@ export default async function FinanceReviewPage() {
   }
   const missingSuppliers = Array.from(missingBySupplier.entries())
     .map(([supplier, values]) => ({ supplier, ...values }))
+    .sort((a, b) => b.amount - a.amount);
+
+  const decisionMap = new Map<string, { count: number; amount: number }>();
+  for (const row of d.reviewBank) {
+    const key = row.classification || 'review';
+    const current = decisionMap.get(key) ?? { count: 0, amount: 0 };
+    current.count += 1;
+    current.amount += Math.abs(Number(row.amount));
+    decisionMap.set(key, current);
+  }
+  const decisionGroups = Array.from(decisionMap.entries())
+    .map(([classification, values]) => ({
+      classification,
+      ...values,
+      ...(decisionCopy[classification] ?? decisionCopy.review),
+    }))
     .sort((a, b) => b.amount - a.amount);
 
   return (
@@ -29,9 +74,9 @@ export default async function FinanceReviewPage() {
 
       <div className="finance-grid pnl-grid">
         <div className="finance-card metric">
-          <div className="metric-label">OCBC reconciliation</div>
+          <div className="metric-label">OCBC payment matching</div>
           <div className="metric-value">{d.bankReconciliationCoverage}%</div>
-          <div className="metric-sub">{d.matchedBank.length} of {d.bank.length} company-bank transactions confirmed</div>
+          <div className="metric-sub">{d.matchedBank.length} of {d.bank.length} bank movements linked to evidence or transfer logic</div>
         </div>
         <div className="finance-card metric">
           <div className="metric-label">DBS card reconciliation</div>
@@ -61,6 +106,28 @@ export default async function FinanceReviewPage() {
           <div><span>OCBC statement data</span><b>{shortDate(d.alignment.bank_period_start)} – {shortDate(d.alignment.bank_period_end)}</b></div>
           <div><span>DBS card data</span><b>{shortDate(d.alignment.card_period_start)} – {shortDate(d.alignment.card_period_end)}</b></div>
           <div><span>Latest imported card activity</span><b>{shortDate(d.latestDate)}</b></div>
+        </div>
+      </div>
+
+      <div className="finance-card decision-card" style={{ marginTop: 12 }}>
+        <div className="finance-section-head">
+          <div>
+            <h2>The decisions that will close OCBC</h2>
+            <p>{d.reviewBank.length} transactions are condensed into {decisionGroups.length} bookkeeping decisions.</p>
+          </div>
+        </div>
+        <div className="decision-grid">
+          {decisionGroups.map((group) => (
+            <article key={group.classification} className="decision-item">
+              <div className="decision-topline">
+                <span>{group.treatment}</span>
+                <b>{group.count} item{group.count === 1 ? '' : 's'}</b>
+              </div>
+              <h3>{group.label}</h3>
+              <div className="decision-amount">{sgd(group.amount)}</div>
+              <p>{group.next}</p>
+            </article>
+          ))}
         </div>
       </div>
 
