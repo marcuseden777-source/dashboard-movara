@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { MovaraMark } from '@/components/brand/MovaraMark';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -31,10 +32,10 @@ export default function LoginPage() {
       <div className="login-card">
         {/* Brand */}
         <div className="login-brand">
-          <div className="login-logo">M</div>
+          <div className="login-logo"><MovaraMark /></div>
           <div className="login-brand-text">
-            <span className="login-brand-name">Movara</span>
-            <span className="login-brand-sub">Agency Dashboard</span>
+            <span className="login-brand-name">Movara <em>Solutions</em></span>
+            <span className="login-brand-sub">Operating System</span>
           </div>
         </div>
 
@@ -71,7 +72,7 @@ export default function LoginPage() {
                 autoFocus
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                placeholder="you@agency.com"
+                placeholder="you@movara.co"
               />
             </div>
 
@@ -97,41 +98,28 @@ export default function LoginPage() {
           min-height: 100vh;
           display: grid;
           place-items: center;
-          background: var(--bg);
+          background:
+            radial-gradient(58rem 28rem at 50% -10rem, rgba(226,211,189,.07), transparent 72%),
+            var(--bg);
           padding: 20px;
           position: relative;
           overflow: hidden;
         }
-
-        /* Subtle ambient glows */
-        .login-blob {
-          position: absolute;
-          border-radius: 50%;
-          filter: blur(80px);
-          opacity: 0.07;
-          pointer-events: none;
-        }
-        .login-blob-1 {
-          width: 500px; height: 500px;
-          background: #6366f1;
-          top: -120px; left: -120px;
-        }
-        .login-blob-2 {
-          width: 400px; height: 400px;
-          background: #8b5cf6;
-          bottom: -100px; right: -100px;
-        }
+        .login-blob { display: none; }
 
         .login-card {
           position: relative;
           z-index: 1;
           width: 100%;
-          max-width: 400px;
-          background: var(--surface);
+          max-width: 420px;
+          background:
+            linear-gradient(155deg, rgba(239,233,223,.04), transparent 46%),
+            rgba(23,21,19,.88);
           border: 1px solid var(--border);
-          border-radius: 16px;
-          padding: 36px 32px;
-          box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+          border-radius: 14px;
+          padding: 34px 32px 30px;
+          box-shadow: 0 28px 80px rgba(0,0,0,.28);
+          backdrop-filter: blur(18px);
         }
 
         .login-brand {
@@ -141,32 +129,37 @@ export default function LoginPage() {
           margin-bottom: 24px;
         }
         .login-logo {
-          width: 44px; height: 44px;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
-          border-radius: 12px;
+          width: 36px;
+          height: 40px;
           display: grid;
           place-items: center;
-          font-weight: 800;
-          font-size: 20px;
-          color: #fff;
+          color: var(--text);
           flex-shrink: 0;
-          box-shadow: 0 4px 12px rgba(99,102,241,0.4);
         }
+        .login-logo svg { width: 24px; height: auto; }
         .login-brand-text {
           display: flex;
           flex-direction: column;
-          gap: 2px;
+          gap: 3px;
         }
         .login-brand-name {
-          font-weight: 700;
+          font-family: var(--font-head);
+          font-weight: 500;
           font-size: 18px;
           color: var(--text);
-          letter-spacing: -0.3px;
+          letter-spacing: -.03em;
+        }
+        .login-brand-name em {
+          font-family: var(--font-display);
+          font-style: italic;
+          font-weight: 400;
+          color: rgba(239,233,223,.78);
         }
         .login-brand-sub {
-          font-size: 12px;
+          font-family: var(--font-mono);
+          font-size: 8px;
           color: var(--muted);
-          letter-spacing: 0.3px;
+          letter-spacing: .17em;
           text-transform: uppercase;
         }
 
@@ -175,119 +168,112 @@ export default function LoginPage() {
           background: var(--border);
           margin-bottom: 28px;
         }
-
         .login-title {
-          font-size: 20px;
-          font-weight: 700;
           margin: 0 0 8px;
           color: var(--text);
-          letter-spacing: -0.3px;
+          font-family: var(--font-head);
+          font-size: 23px;
+          font-weight: 500;
+          letter-spacing: -.035em;
         }
         .login-subtitle {
-          font-size: 13px;
-          color: var(--muted);
           margin: 0 0 24px;
+          color: var(--muted);
+          font-size: 12px;
           line-height: 1.6;
         }
-
-        .login-field {
-          margin-bottom: 16px;
-        }
+        .login-field { margin-bottom: 16px; }
         .login-label {
           display: block;
-          font-size: 12px;
-          font-weight: 600;
-          color: var(--muted);
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
           margin-bottom: 8px;
+          color: var(--muted);
+          font-family: var(--font-mono);
+          font-size: 8px;
+          font-weight: 400;
+          letter-spacing: .15em;
+          text-transform: uppercase;
         }
         .login-input {
           width: 100%;
-          background: var(--bg);
-          border: 1px solid var(--border);
-          border-radius: 8px;
-          padding: 11px 14px;
-          font-size: 14px;
-          color: var(--text);
-          outline: none;
-          transition: border-color 0.15s;
           box-sizing: border-box;
+          background: rgba(239,233,223,.025);
+          border: 1px solid var(--border);
+          border-radius: 9px;
+          padding: 12px 13px;
+          color: var(--text);
+          font-size: 13px;
+          outline: none;
+          transition: border-color .16s, box-shadow .16s;
         }
         .login-input:focus {
-          border-color: #6366f1;
-          box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+          border-color: rgba(226,211,189,.52);
+          box-shadow: 0 0 0 3px rgba(226,211,189,.07);
         }
-        .login-input::placeholder {
-          color: var(--muted);
-          opacity: 0.5;
-        }
+        .login-input::placeholder { color: rgba(163,155,144,.48); }
 
         .login-error {
-          font-size: 13px;
-          color: var(--red, #f87171);
           margin: 0 0 14px;
+          color: var(--red);
+          font-size: 12px;
         }
-
         .login-btn {
           width: 100%;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
-          color: #fff;
-          border: none;
-          border-radius: 8px;
-          padding: 12px;
-          font-size: 14px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: opacity 0.15s, transform 0.1s;
+          min-height: 44px;
           display: flex;
           align-items: center;
           justify-content: center;
-          min-height: 44px;
+          border: 1px solid var(--text);
+          border-radius: 999px;
+          background: var(--text);
+          color: var(--bg);
+          font-size: 12px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background-color .16s, color .16s, transform .28s var(--ease-expo);
         }
-        .login-btn:hover:not(:disabled) { opacity: 0.9; }
-        .login-btn:active:not(:disabled) { transform: scale(0.99); }
-        .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
+        .login-btn:hover:not(:disabled) {
+          background: transparent;
+          color: var(--text);
+          transform: translateY(-1px);
+        }
+        .login-btn:disabled { opacity: .5; cursor: not-allowed; }
         .login-spinner {
-          width: 16px; height: 16px;
-          border: 2px solid rgba(255,255,255,0.3);
-          border-top-color: #fff;
+          width: 15px; height: 15px;
+          border: 1.5px solid rgba(15,14,13,.25);
+          border-top-color: #171513;
           border-radius: 50%;
-          animation: spin 0.7s linear infinite;
+          animation: spin .7s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Sent state */
-        .login-sent {
-          text-align: center;
-          padding: 8px 0 4px;
-        }
+        .login-sent { text-align: center; padding: 8px 0 4px; }
         .login-sent-icon {
-          font-size: 40px;
-          margin-bottom: 16px;
-          filter: grayscale(0);
+          width: 40px;
+          height: 40px;
+          margin: 0 auto 16px;
+          display: grid;
+          place-items: center;
+          border: 1px solid var(--border);
+          border-radius: 50%;
+          color: var(--sand);
+          font-size: 18px;
         }
         .login-sent .login-title { margin-bottom: 12px; }
-        .login-sent .login-subtitle {
-          margin-bottom: 24px;
-        }
-        .login-sent strong {
-          color: var(--text);
-          font-weight: 600;
-        }
+        .login-sent .login-subtitle { margin-bottom: 24px; }
+        .login-sent strong { color: var(--text); font-weight: 500; }
         .login-back {
-          background: none;
-          border: 1px solid var(--border);
-          color: var(--muted);
-          border-radius: 8px;
+          min-height: 40px;
           padding: 8px 16px;
-          font-size: 13px;
+          border: 1px solid var(--border);
+          border-radius: 999px;
+          background: transparent;
+          color: var(--muted);
+          font-size: 11px;
           cursor: pointer;
-          transition: border-color 0.15s, color 0.15s;
+          transition: border-color .16s, color .16s;
         }
         .login-back:hover {
-          border-color: var(--text);
+          border-color: rgba(239,233,223,.35);
           color: var(--text);
         }
       `}</style>
