@@ -4,7 +4,8 @@ import { createClient } from '@/lib/supabase/client';
 import { initials } from '@/lib/finance';
 
 const NAV = [
-  { href: '/', icon: '◆', label: 'Dashboard' },
+  { href: '/', icon: '◆', label: 'Command Centre' },
+  { href: '/finance', icon: '◈', label: 'Finance OS' },
   { href: '/clients', icon: '●', label: 'Clients' },
   { href: '/projects', icon: '▤', label: 'Projects' },
   { href: '/tasks', icon: '✓', label: 'Tasks' },
@@ -43,7 +44,7 @@ export default function Sidebar({ companyName }: { companyName: string }) {
         <div className="brand-logo">{initials(companyName)}</div>
         <div>
           <div className="brand-name">{companyName}</div>
-          <div className="brand-sub">Workflow Dashboard</div>
+          <div className="brand-sub">Movara OS</div>
         </div>
       </div>
 
