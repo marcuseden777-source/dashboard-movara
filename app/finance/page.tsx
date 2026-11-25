@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { MovaraMark } from '@/components/brand/MovaraMark';
 import { getFinanceData, monthLabel, sgd, shortDate } from '@/lib/finance-os';
 
 export default async function FinanceOverviewPage() {
@@ -56,7 +57,7 @@ export default async function FinanceOverviewPage() {
         </div>
 
         <div className="finance-card finance-agent">
-          <div className="agent-orb" />
+          <div className="agent-mark"><MovaraMark /></div>
           <h3>Finance Agent</h3>
           <p>Watching the ledger for missing proof, duplicate spend and anything that should not hit P&amp;L.</p>
           <div className="agent-insight">
