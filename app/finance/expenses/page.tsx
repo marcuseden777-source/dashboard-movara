@@ -3,6 +3,8 @@ import { getFinanceData, sgd } from '@/lib/finance-os';
 export default async function ExpensesPage() {
   const d = await getFinanceData();
   const totalReview = d.suppliers.reduce((sum, row) => sum + row.amount, 0);
+  const linkedExisting = d.reviews.filter((row) => row.review_status === 'linked_existing');
+  const linkedExistingTotal = linkedExisting.reduce((sum, row) => sum + Number(row.amount || 0), 0);
   const preIncorporationTotal = d.preIncorporationLegacyExpenses.reduce(
     (sum, row) => sum + Number(row.amount || 0),
     0
@@ -24,10 +26,10 @@ export default async function ExpensesPage() {
     <>
       <div className="review-callout">
         <div>
-          <strong>Two historical expense pools are being reconciled.</strong>
-          <p>The legacy expense ledger and personal-funded review ledger may overlap. They are shown separately and must not be added together until duplicate cleanup is complete.</p>
+          <strong>The two historical expense pools are now being linked instead of added together.</strong>
+          <p>{linkedExisting.length} one-to-one duplicate records have already been linked to the legacy ledger. Remaining personal-funded items stay in review until matched or approved.</p>
         </div>
-        <div className="review-count">2</div>
+        <div className="review-count">{linkedExisting.length}</div>
       </div>
 
       <div className="finance-grid pnl-grid">
@@ -37,9 +39,9 @@ export default async function ExpensesPage() {
           <div className="metric-sub">{d.postIncorporationLegacyExpenses.length} entries dated on or after incorporation</div>
         </div>
         <div className="finance-card metric">
-          <div className="metric-label">Personal-funded review pool</div>
+          <div className="metric-label">Unlinked review pool</div>
           <div className="metric-value">{sgd(totalReview)}</div>
-          <div className="metric-sub">Review ledger only; not an additional booked total</div>
+          <div className="metric-sub">Pending personal-funded records only; no longer includes linked duplicates</div>
         </div>
         <div className="finance-card metric">
           <div className="metric-label">Evidence attached</div>
@@ -86,7 +88,7 @@ export default async function ExpensesPage() {
           <div className="finance-section-head">
             <div>
               <h2>Personal-funded review by supplier</h2>
-              <p>Evidence status before reimbursement or accounting approval.</p>
+              <p>Only unlinked items remain here for evidence, allocation or approval.</p>
             </div>
             <div className="big">{d.suppliers.length}</div>
           </div>
@@ -106,11 +108,15 @@ export default async function ExpensesPage() {
               </tbody>
             </table>
           </div>
+          <div className="finance-mini-summary">
+            <div><span>Linked to legacy ledger</span><b>{linkedExisting.length} records</b></div>
+            <div><span>Linked review value</span><b>{sgd(linkedExistingTotal)}</b></div>
+          </div>
         </div>
       </div>
 
       <div className="pnl-note" style={{ margin: '12px 0 0' }}>
-        Final expenses will come from one deduplicated source of truth. Until then, the draft P&amp;L uses the legacy expense ledger only and keeps the personal-funded review pool separate.
+        The draft P&amp;L uses the legacy expense ledger once. Linked card-review records are retained for evidence and audit, but no longer inflate the pending expense pool.
       </div>
     </>
   );
