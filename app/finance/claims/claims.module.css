@@ -198,17 +198,43 @@
   font-weight: 500;
 }
 
-:global(.status.verified) {
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 7px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.statusPill::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.verified {
   color: var(--green);
   background: var(--green-soft);
 }
 
-:global(.status.approved) {
+.reviewStatus {
+  color: var(--amber);
+  background: var(--amber-soft);
+}
+
+.approved {
   color: var(--sand);
   background: rgba(226, 211, 189, 0.10);
 }
 
-:global(.status.paid) {
+.paid {
   color: var(--blue);
   background: var(--blue-soft);
 }
