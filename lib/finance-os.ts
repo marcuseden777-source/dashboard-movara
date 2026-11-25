@@ -94,9 +94,7 @@ export async function getFinanceData() {
   const supabase = await createClient();
   const { data: snapshot, error } = await (supabase as any).rpc('get_movara_finance_snapshot');
 
-  if (error) {
-    throw new Error(`Finance OS snapshot failed: ${error.message}`);
-  }
+  const connectionError = error ? `Finance OS snapshot unavailable in this environment: ${error.message}` : null;
 
   const raw = (snapshot ?? {}) as {
     bank?: FinanceBankTx[];
@@ -197,5 +195,6 @@ export async function getFinanceData() {
     reviewMissingEvidence,
     reviewExcluded,
     evidenceCoverage,
+    connectionError,
   };
 }
