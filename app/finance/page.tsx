@@ -8,6 +8,15 @@ export default async function FinanceOverviewPage() {
 
   return (
     <>
+      {d.connectionError && (
+        <div className="review-callout">
+          <div>
+            <strong>Finance data connector is not attached to this dashboard preview yet.</strong>
+            <p>The interface is live for design review; the standalone Finance OS remains the source for live finance data until the cross-project bridge is connected.</p>
+          </div>
+          <div className="review-count">UI</div>
+        </div>
+      )}
       <div className="finance-grid metrics">
         <div className="finance-card metric">
           <div className="metric-label">Cash position</div>
