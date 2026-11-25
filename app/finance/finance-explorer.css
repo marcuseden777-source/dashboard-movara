@@ -1,0 +1,89 @@
+.transaction-explorer {
+  overflow: visible;
+}
+.transaction-filterbar {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) repeat(3, minmax(120px, auto));
+  gap: 7px;
+  padding: 0 16px 11px;
+}
+.transaction-filterbar input,
+.transaction-filterbar select {
+  min-width: 0;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(239,233,223,.025);
+  color: rgba(239,233,223,.82);
+  font-size: 9px;
+  outline: none;
+  transition: border-color 160ms var(--ease-out), box-shadow 160ms var(--ease-out);
+}
+.transaction-filterbar input::placeholder {
+  color: rgba(163,155,144,.58);
+}
+.transaction-filterbar input:focus,
+.transaction-filterbar select:focus {
+  border-color: rgba(226,211,189,.45);
+  box-shadow: 0 0 0 3px rgba(226,211,189,.06);
+}
+.transaction-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--border);
+}
+.transaction-summary > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 13px;
+  background: var(--panel);
+}
+.transaction-summary span {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+.source-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 3px 7px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: rgba(239,233,223,.68);
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.transaction-empty {
+  padding: 34px !important;
+  color: var(--muted);
+  text-align: center !important;
+}
+
+@media (max-width: 980px) {
+  .transaction-filterbar {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .transaction-filterbar input {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 620px) {
+  .transaction-filterbar,
+  .transaction-summary {
+    grid-template-columns: 1fr;
+  }
+  .transaction-filterbar input {
+    grid-column: auto;
+  }
+}
