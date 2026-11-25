@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import FinanceNav from '@/components/finance/FinanceNav';
 import './finance.css';
 import './finance-enhancements.css';
+import './finance-explorer.css';
 
 export default function FinanceLayout({ children }: { children: ReactNode }) {
   return (
