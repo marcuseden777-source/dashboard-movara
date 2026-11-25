@@ -8,7 +8,7 @@ export default function FinanceLayout({ children }: { children: ReactNode }) {
       <div className="finance-top">
         <div>
           <div className="finance-kicker">MOVARA OS / FINANCE</div>
-          <h1>Finance Command Centre</h1>
+          <h1>Finance <em>Command Centre</em></h1>
           <p>One operating view across cash, cards, evidence, assets and approvals.</p>
         </div>
         <div className="live-pill"><span /> LIVE BOOKS</div>
