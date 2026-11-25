@@ -5,13 +5,14 @@ import { usePathname } from 'next/navigation';
 
 const items = [
   ['/finance', 'Overview'],
+  ['/finance/pnl', 'P&L'],
   ['/finance/transactions', 'Transactions'],
   ['/finance/expenses', 'Expenses'],
   ['/finance/revenue', 'Revenue'],
   ['/finance/assets', 'Assets'],
   ['/finance/claims', 'Claims'],
   ['/finance/documents', 'Documents'],
-  ['/finance/review', 'Review'],
+  ['/finance/review', 'Books status'],
 ] as const;
 
 export default function FinanceNav() {
