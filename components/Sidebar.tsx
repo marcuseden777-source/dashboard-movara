@@ -59,7 +59,7 @@ export default function Sidebar({ companyName: _companyName }: { companyName: st
             onClick={() => router.push(item.href)}
           >
             <span className="nav-icon">{item.icon}</span>
-            {item.label}
+            <span className="nav-label">{item.label}</span>
           </button>
         );
       })}
