@@ -123,7 +123,7 @@ export default async function ClaimsPage() {
                   <td className="muted">{shortDate(claim.incurred_on)}</td>
                   <td>{d.partyById[claim.claimant_id]?.display_name || '—'}</td>
                   <td className="primary">{claim.description}</td>
-                  <td><span className="status verified">verified</span></td>
+                  <td><span className={`${styles.statusPill} ${styles.verified}`}>verified</span></td>
                   <td className="money">{sgd(Number(claim.amount))}</td>
                 </tr>
               ))}
@@ -149,7 +149,7 @@ export default async function ClaimsPage() {
                   <td className="muted">{shortDate(claim.incurred_on)}</td>
                   <td>{d.partyById[claim.claimant_id]?.display_name || '—'}</td>
                   <td className="primary">{claim.description}</td>
-                  <td><span className="status review">review</span></td>
+                  <td><span className={`${styles.statusPill} ${styles.reviewStatus}`}>review</span></td>
                   <td className="money">{sgd(Number(claim.amount))}</td>
                 </tr>
               ))}
