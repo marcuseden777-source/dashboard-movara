@@ -92,37 +92,31 @@ export function monthLabel(key: string) {
 
 export async function getFinanceData() {
   const supabase = await createClient();
-  const finance = (supabase as any).schema('finance_os');
+  const { data: snapshot, error } = await (supabase as any).rpc('get_movara_finance_snapshot');
 
-  const [
-    bankRes,
-    cardRes,
-    claimsRes,
-    partiesRes,
-    docsRes,
-    reviewsRes,
-  ] = await Promise.all([
-    finance.from('bank_transactions').select('*').order('transaction_date', { ascending: false }),
-    finance.from('card_transactions').select('*').order('transaction_date', { ascending: false }),
-    finance.from('expense_claims').select('*').order('incurred_on', { ascending: false }),
-    finance.from('parties').select('id, display_name, kind'),
-    finance.from('documents').select('*').order('created_at', { ascending: false }),
-    (supabase as any)
-      .from('personal_funded_expense_review')
-      .select('id,supplier,description,transaction_date,amount,currency,review_status,reimbursement_status,funded_by,document_url,notes')
-      .order('transaction_date', { ascending: false }),
-  ]);
+  if (error) {
+    throw new Error(`Finance OS snapshot failed: ${error.message}`);
+  }
 
-  const bank = (bankRes.data ?? []) as FinanceBankTx[];
-  const cards = (cardRes.data ?? []) as FinanceCardTx[];
-  const claims = (claimsRes.data ?? []) as FinanceClaim[];
-  const parties = (partiesRes.data ?? []) as FinanceParty[];
-  const documents = (docsRes.data ?? []) as FinanceDocument[];
-  const reviews = (reviewsRes.data ?? []) as PersonalReview[];
+  const raw = (snapshot ?? {}) as {
+    bank?: FinanceBankTx[];
+    cards?: FinanceCardTx[];
+    claims?: FinanceClaim[];
+    parties?: FinanceParty[];
+    documents?: FinanceDocument[];
+    reviews?: PersonalReview[];
+  };
+
+  const bank = raw.bank ?? [];
+  const cards = raw.cards ?? [];
+  const claims = raw.claims ?? [];
+  const parties = raw.parties ?? [];
+  const documents = raw.documents ?? [];
+  const reviews = raw.reviews ?? [];
 
   const latestDate = cards
     .map((t) => t.transaction_date)
-    .filter(Boolean)
+    .filter((x): x is string => Boolean(x))
     .sort()
     .at(-1) ?? new Date().toISOString().slice(0, 10);
   const latestMonth = latestDate.slice(0, 7);
