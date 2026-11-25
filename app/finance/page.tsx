@@ -11,37 +11,57 @@ export default async function FinanceOverviewPage() {
       {d.connectionError && (
         <div className="review-callout">
           <div>
-            <strong>Finance data connector is not attached to this dashboard preview yet.</strong>
-            <p>The interface is live for design review; the standalone Finance OS remains the source for live finance data until the cross-project bridge is connected.</p>
+            <strong>Finance data connection needs attention.</strong>
+            <p>{d.connectionError}</p>
           </div>
-          <div className="review-count">UI</div>
+          <div className="review-count">!</div>
         </div>
       )}
+
+      <div className="finance-alignment-strip">
+        <div>
+          <span>Books status</span>
+          <b>{d.finalPnlReady ? 'Aligned and posted' : 'Draft — reconciliation in progress'}</b>
+        </div>
+        <div>
+          <span>Coverage</span>
+          <b>{d.reconciliationCoverage}% of imported transactions matched</b>
+        </div>
+        <div>
+          <span>Current period</span>
+          <b>{shortDate(d.incorporatedOn)} – {shortDate(d.latestDate)}</b>
+        </div>
+        <div className="alignment-actions">
+          <Link href="/finance/pnl">Open P&amp;L</Link>
+          <Link href="/finance/review">Books status</Link>
+        </div>
+      </div>
+
       <div className="finance-grid metrics">
         <div className="finance-card metric">
           <div className="metric-label">Cash position</div>
           <div className="metric-value">{sgd(d.cashPosition)}</div>
-          <div className="metric-sub">Imported OCBC position through current bank ledger</div>
+          <div className="metric-sub">Imported OCBC ledger position through {shortDate(d.alignment.bank_period_end)}</div>
         </div>
         <div className="finance-card metric">
-          <div className="metric-label">{monthLabel(d.latestMonth)} operating spend</div>
-          <div className="metric-value">{sgd(d.monthOperatingSpend)}</div>
-          <div className="metric-sub">Matched card spend excluding asset instalments</div>
+          <div className="metric-label">Recorded revenue</div>
+          <div className="metric-value">{sgd(d.draftRevenue)}</div>
+          <div className="metric-sub">{sgd(d.reconciledRevenue)} is directly linked to OCBC references</div>
         </div>
         <div className="finance-card metric">
-          <div className="metric-label">Asset payments</div>
-          <div className="metric-value">{sgd(d.monthAssetPayments)}</div>
-          <div className="metric-sub">Current-month capital-asset instalments</div>
+          <div className="metric-label">Draft net result</div>
+          <div className={`metric-value ${d.draftNet >= 0 ? 'good' : 'warn'}`}>{sgd(d.draftNet)}</div>
+          <div className="metric-sub">Recorded revenue less legacy expenses; not yet a posted P&amp;L</div>
         </div>
         <div className="finance-card metric">
           <div className="metric-label">Unresolved card spend</div>
           <div className="metric-value warn">{sgd(d.unresolvedSpend)}</div>
-          <div className="metric-sub">{d.candidateCards.length} candidate transactions need evidence</div>
+          <div className="metric-sub">{d.candidateCards.length} DBS transactions need evidence or a decision</div>
         </div>
         <div className="finance-card metric">
           <div className="metric-label">Claims in review</div>
           <div className="metric-value">{sgd(d.claimsReviewTotal)}</div>
-          <div className="metric-sub">{d.claimsReview.length} claims not yet approved or posted</div>
+          <div className="metric-sub">{d.claimsReview.length} claims not yet approved or reimbursed</div>
         </div>
       </div>
 
@@ -50,7 +70,7 @@ export default async function FinanceOverviewPage() {
           <div className="finance-section-head">
             <div>
               <h2>Spend intelligence</h2>
-              <p>Personal-funded review ledger grouped by supplier. Review data, not final P&L.</p>
+              <p>Personal-funded review ledger grouped by supplier. Review data, not final P&amp;L.</p>
             </div>
             <Link href="/finance/expenses" className="doc-link">View expenses →</Link>
           </div>
@@ -63,6 +83,10 @@ export default async function FinanceOverviewPage() {
               </div>
             ))}
           </div>
+          <div className="finance-mini-summary">
+            <div><span>{monthLabel(d.latestMonth)} operating spend</span><b>{sgd(d.monthOperatingSpend)}</b></div>
+            <div><span>Capital-asset payments</span><b>{sgd(d.monthAssetPayments)}</b></div>
+          </div>
         </div>
 
         <div className="finance-card finance-agent">
@@ -70,20 +94,19 @@ export default async function FinanceOverviewPage() {
           <h3>Finance Agent</h3>
           <p>Watching the ledger for missing proof, duplicate spend and anything that should not hit P&amp;L.</p>
           <div className="agent-insight">
-            <b>{d.candidateCards.length} transactions still need proof</b>
+            <b>{d.reviewBank.length} OCBC items still need classification</b>
+            <span>Funding, transfers and unclear payments remain outside the final P&amp;L.</span>
+          </div>
+          <div className="agent-insight">
+            <b>{d.candidateCards.length} DBS transactions still need proof</b>
             <span>{sgd(d.unresolvedSpend)} is deliberately held outside final accounting treatment.</span>
           </div>
           <div className="agent-insight">
-            <b>{d.assets.length} capital-asset records detected</b>
-            <span>Instalments are separated from operating spend so burn rate stays honest.</span>
-          </div>
-          <div className="agent-insight">
             <b>{d.reviewMissingEvidence.length} review rows lack a document</b>
-            <span>The system will keep these visible until evidence or an explicit exclusion exists.</span>
+            <span>The system keeps these visible until evidence or an explicit exclusion exists.</span>
           </div>
-          <button className="agent-prompt">How much did we spend on AI this month?</button>
-          <button className="agent-prompt">Show everything without receipts</button>
-          <button className="agent-prompt">What does Movara owe the team?</button>
+          <Link href="/finance/review" className="agent-prompt">Open the complete books-status queue →</Link>
+          <Link href="/finance/pnl" className="agent-prompt">Review the draft P&amp;L →</Link>
         </div>
       </div>
 
@@ -118,17 +141,17 @@ export default async function FinanceOverviewPage() {
 
         <div className="finance-card pad">
           <div className="finance-section-head" style={{ padding: 0, marginBottom: 12 }}>
-            <div><h2>Books health</h2><p>Evidence matching on imported DBS card activity.</p></div>
+            <div><h2>Books health</h2><p>Combined OCBC and DBS reconciliation coverage.</p></div>
           </div>
-          <div className="health-ring" style={{ ['--value' as any]: d.evidenceCoverage }}>
-            <div><strong>{d.evidenceCoverage}%</strong><small>matched</small></div>
+          <div className="health-ring" style={{ ['--value' as any]: d.reconciliationCoverage }}>
+            <div><strong>{d.reconciliationCoverage}%</strong><small>matched</small></div>
           </div>
           <div className="health-list">
-            <div className="health-row"><span>Matched card transactions</span><b>{d.matchedCards.length}</b></div>
-            <div className="health-row"><span>Needs evidence / decision</span><b>{d.candidateCards.length}</b></div>
+            <div className="health-row"><span>OCBC matched</span><b>{d.matchedBank.length} / {d.bank.length}</b></div>
+            <div className="health-row"><span>DBS matched</span><b>{d.matchedCards.length} / {d.cards.length}</b></div>
             <div className="health-row"><span>Evidence-backed review rows</span><b>{d.reviewWithEvidence.length}</b></div>
             <div className="health-row"><span>Missing document rows</span><b>{d.reviewMissingEvidence.length}</b></div>
-            <div className="health-row"><span>Journal entries posted</span><b>0</b></div>
+            <div className="health-row"><span>Journal entries posted</span><b>{Number(d.alignment.posted_journals || 0)}</b></div>
             <div className="health-row"><span>Latest card data</span><b>{shortDate(d.latestDate)}</b></div>
           </div>
         </div>
