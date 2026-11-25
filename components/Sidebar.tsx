@@ -1,28 +1,26 @@
 'use client';
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { initials } from '@/lib/finance';
+import { MovaraMark } from '@/components/brand/MovaraMark';
 
 const NAV = [
-  { href: '/', icon: '◆', label: 'Dashboard' },
+  { section: 'Command' },
+  { href: '/', icon: '◆', label: 'Command Centre' },
+  { href: '/finance', icon: '◈', label: 'Finance OS' },
+  { section: 'Work' },
   { href: '/clients', icon: '●', label: 'Clients' },
   { href: '/projects', icon: '▤', label: 'Projects' },
   { href: '/tasks', icon: '✓', label: 'Tasks' },
-  { section: 'Finances' },
-  { href: '/pnl', icon: '∑', label: 'P&L Overview' },
-  { href: '/expenses', icon: '▼', label: 'Expenses' },
-  { href: '/subscriptions', icon: '↻', label: 'Subscriptions' },
-  { href: '/roi', icon: '%', label: 'Project ROI' },
   { section: 'Documents' },
-  { href: '/ai-generator', icon: '✨', label: 'AI Generator' },
+  { href: '/ai-generator', icon: '✦', label: 'AI Generator' },
   { href: '/quotations', icon: '≡', label: 'Quotations' },
   { href: '/invoices', icon: '¤', label: 'Invoices' },
-  { section: 'Setup' },
-  { href: '/settings', icon: '⚙', label: 'Settings' },
-  { href: '/data', icon: '⤓', label: 'Import / Export' },
+  { section: 'System' },
+  { href: '/settings', icon: '○', label: 'Settings' },
+  { href: '/data', icon: '↓', label: 'Import / Export' },
 ] as const;
 
-export default function Sidebar({ companyName }: { companyName: string }) {
+export default function Sidebar({ companyName: _companyName }: { companyName: string }) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -40,10 +38,10 @@ export default function Sidebar({ companyName }: { companyName: string }) {
   return (
     <aside className="sidebar">
       <div className="brand">
-        <div className="brand-logo">{initials(companyName)}</div>
-        <div>
-          <div className="brand-name">{companyName}</div>
-          <div className="brand-sub">Workflow Dashboard</div>
+        <div className="brand-logo"><MovaraMark /></div>
+        <div className="brand-copy">
+          <div className="brand-name">Movara <em>Solutions</em></div>
+          <div className="brand-sub">Operating System</div>
         </div>
       </div>
 
@@ -58,14 +56,14 @@ export default function Sidebar({ companyName }: { companyName: string }) {
             onClick={() => router.push(item.href)}
           >
             <span className="nav-icon">{item.icon}</span>
-            {item.label}
+            <span className="nav-label">{item.label}</span>
           </button>
         );
       })}
 
       <div style={{ marginTop: 'auto', paddingTop: 12, borderTop: '1px solid var(--border)' }}>
         <button className="nav-item" onClick={signOut} style={{ color: 'var(--muted)' }}>
-          <span className="nav-icon">→</span> Sign out
+          <span className="nav-icon">→</span><span className="nav-label">Sign out</span>
         </button>
       </div>
     </aside>
