@@ -7,6 +7,7 @@ const items = [
   ['/finance', 'Overview'],
   ['/finance/transactions', 'Transactions'],
   ['/finance/expenses', 'Expenses'],
+  ['/finance/revenue', 'Revenue'],
   ['/finance/assets', 'Assets'],
   ['/finance/claims', 'Claims'],
   ['/finance/documents', 'Documents'],
