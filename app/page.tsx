@@ -36,12 +36,17 @@ export default async function DashboardPage() {
   const overdueInvoices = ds.filter(d => d.kind === 'invoice' && d.status === 'Overdue');
 
   return (
-    <div className="page">
-      <div className="page-header">
-        <h1 className="page-title">Dashboard</h1>
-      </div>
+    <div className="page command-page">
+      <header className="command-hero">
+        <div>
+          <div className="command-kicker">MOVARA OS / COMMAND CENTRE</div>
+          <h1>Run the studio <em>from one place.</em></h1>
+          <p>Projects, revenue, finance, tasks and documents — the private operating layer behind Movara Solutions.</p>
+        </div>
+        <Link href="/finance" className="command-finance-link">Open Finance OS <span>↗</span></Link>
+      </header>
 
-      <div className="stats-grid">
+      <div className="stats-grid command-stats">
         <StatCard label="MRR" value={fmtMoney(mrr)} sub="active retainers" />
         <StatCard label="This Month Revenue" value={fmtMoney(monthRevenue)} />
         <StatCard label="Monthly Costs" value={fmtMoney(monthlyCost)} sub="subscriptions" />
@@ -53,7 +58,7 @@ export default async function DashboardPage() {
           trend={overdueInvoices.length > 0 ? 'down' : 'neutral'} />
       </div>
 
-      <div className="two-col">
+      <div className="two-col command-panels">
         <div>
           <div className="section-header">
             <h2 className="section-title">Open Tasks</h2>
